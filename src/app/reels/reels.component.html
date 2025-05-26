@@ -1,0 +1,39 @@
+<div class="wrapper">
+  <div
+    *ngFor="let video of videos; let i = index"
+    class="reel-container"
+    [class.active]="i === currentIndex"
+  >
+  <video
+  #videoPlayer
+  [src]="video"
+  playsinline
+  loop
+  autoplay
+  muted
+  preload="auto"
+  (click)="togglePlay(i)"
+>
+
+      Your browser does not support the video tag.
+    </video>
+
+    <div class="side-actions">
+      <button class="action-btn">❤️<br />22</button>
+      <button class="action-btn">💬<br />55</button>
+    </div>
+
+    <div class="reel-overlay">
+      <div class="user-info">
+        <div class="user-name">
+          Video {{ i + 1 }}
+          <span *ngIf="false" class="verified-badge">✔</span>
+        </div>
+        <button class="follow-btn">Follow</button>
+      </div>
+
+      <div class="reel-description">Description for video {{ i + 1 }}</div>
+      <div class="music-info">🎵 Music title here</div>
+    </div>
+  </div>
+</div>
