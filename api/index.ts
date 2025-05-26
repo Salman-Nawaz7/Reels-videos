@@ -1,20 +1,22 @@
 import { NestFactory } from '../backend/node_modules/@nestjs/core';
 import { ExpressAdapter } from '../backend/node_modules/@nestjs/platform-express';
-import * as express from '../backend/node_modules/express';
+import express from 'express';
+
 import { AppModule } from '../backend/src/app.module';
 
-let cachedServer;
 
-async function bootstrap() {
-  const server = express();
-  const app = await NestFactory.create(AppModule, new ExpressAdapter(server));
-  await app.init();
-  return server;
-}
+import { Server } from 'http';
 
-export default async function handler(req, res) {
+let cachedServer: Server;
+
+export default async function handler(req: any, res: any) {
   if (!cachedServer) {
-    cachedServer = await bootstrap();
+    const expressApp = express();
+    const adapter = new ExpressAdapter(expressApp);
+    const app = await NestFactory.create(AppModule, adapter);
+    await app.init();
+    cachedServer = expressApp.listen(0);
   }
-  cachedServer(req, res);
+
+  return cachedServer.emit('request', req, res);
 }
